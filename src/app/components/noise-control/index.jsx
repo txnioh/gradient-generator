@@ -1,72 +1,46 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
+import styles from '../../styles/glass.module.css';
 
-const NoiseControl = ({ noiseAmount, setNoiseAmount, isDraggingNoise, setIsDraggingNoise }) => {
-  const noiseSliderRef = useRef(null);
-
-  const updateNoiseAmount = (clientX) => {
-    const slider = noiseSliderRef.current;
-    if (!slider) return;
-
-    const rect = slider.getBoundingClientRect();
-    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    setNoiseAmount((x / rect.width) * 100);
+export default function NoiseControl({
+  noiseAmount,
+  setNoiseAmount
+}) {
+  const handleNoiseChange = (e) => {
+    setNoiseAmount(parseInt(e.target.value));
   };
 
-  const handleNoiseStart = (clientX) => {
-    setIsDraggingNoise(true);
-    updateNoiseAmount(clientX);
-  };
-
-  const handleNoiseMove = (clientX) => {
-    if (isDraggingNoise) {
-      updateNoiseAmount(clientX);
-    }
-  };
-
-  const handleNoiseEnd = () => {
-    setIsDraggingNoise(false);
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e) => handleNoiseMove(e.clientX);
-    const handleTouchMove = (e) => handleNoiseMove(e.touches[0].clientX);
-
-    if (isDraggingNoise) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('touchmove', handleTouchMove);
-      window.addEventListener('mouseup', handleNoiseEnd);
-      window.addEventListener('touchend', handleNoiseEnd);
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('mouseup', handleNoiseEnd);
-      window.removeEventListener('touchend', handleNoiseEnd);
-    };
-  }, [isDraggingNoise]);
+  const noiseSteps = [0, 1, 2, 3, 4];
+  const noisePercentages = [0, 12.5, 25, 37.5, 50];
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold mb-4 text-gray-100">Noise Control</h3>
-      <div 
-        ref={noiseSliderRef}
-        className="w-full h-6 bg-gray-700 rounded-full cursor-pointer relative"
-        onMouseDown={(e) => handleNoiseStart(e.clientX)}
-        onTouchStart={(e) => handleNoiseStart(e.touches[0].clientX)}
-      >
-        <div 
-          className="h-full bg-orange-50 rounded-full absolute left-0 top-0 transition-all duration-150 ease-out"
-          style={{ width: `${noiseAmount}%` }}
-        ></div>
-        <div 
-          className="w-6 h-6 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 shadow-md transition-all duration-150 ease-out"
-          style={{ left: `calc(${noiseAmount}% - 12px)` }}
-        ></div>
+    <div className={`${styles.glassEffect} space-y-4 p-6`}>
+      <h2 className="text-xl font-bold mb-4 text-orange-300">Noise Control</h2>
+      <div className="space-y-2">
+        <label className="block text-sm font-bold text-orange-200">
+          Noise Amount: {noisePercentages[noiseAmount]}%
+        </label>
+        <div className="relative pt-1">
+          <input
+            type="range"
+            min="0"
+            max="4"
+            step="1"
+            value={noiseAmount}
+            onChange={handleNoiseChange}
+            className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer"
+            style={{
+              background: `linear-gradient(to right, #fdba74 0%, #fdba74 ${noiseAmount * 25}%, #000000 ${noiseAmount * 25}%, #000000 100%)`
+            }}
+          />
+          <div className="flex justify-between w-full px-2 mt-2">
+            {noiseSteps.map((value) => (
+              <span key={value} className="text-xs text-orange-200">
+                {value}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
-      <span className="text-sm text-gray-300 mt-2 block">{noiseAmount.toFixed(0)}% Noise</span>
     </div>
   );
-};
-
-export default NoiseControl;
+}

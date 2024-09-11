@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "color": "^4.2.3",
     "next": "14.2.9",
     "openai": "^4.58.2",
     "react": "^18",
