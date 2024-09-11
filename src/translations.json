@@ -1,0 +1,47 @@
+{
+  "en": {
+    "title": "Gradient Generator",
+    "colorControls": "Color Controls",
+    "baseColorInfo": "The first color is the base color that fills the entire canvas.",
+    "size": "Size",
+    "addColor": "Add Color",
+    "randomize": "Randomize",
+    "noiseControl": "Noise Control",
+    "noiseAmount": "Noise Amount",
+    "canvasSettings": "Canvas Settings",
+    "aspectRatio": "Aspect Ratio",
+    "showColorPoints": "Show Color Points",
+    "downloadOptions": "Download Options",
+    "download": "Download"
+  },
+  "es": {
+    "title": "Generador de Gradientes",
+    "colorControls": "Controles de Color",
+    "baseColorInfo": "El primer color es el color base que llena todo el lienzo.",
+    "size": "Tamaño",
+    "addColor": "Añadir Color",
+    "randomize": "Aleatorizar",
+    "noiseControl": "Control de Ruido",
+    "noiseAmount": "Cantidad de Ruido",
+    "canvasSettings": "Ajustes del Lienzo",
+    "aspectRatio": "Relación de Aspecto",
+    "showColorPoints": "Mostrar Puntos de Color",
+    "downloadOptions": "Opciones de Descarga",
+    "download": "Descargar"
+  },
+  "zh": {
+    "title": "渐变生成器",
+    "colorControls": "颜色控制",
+    "baseColorInfo": "第一个颜色是填充整个画布的基色。",
+    "size": "大小",
+    "addColor": "添加颜色",
+    "randomize": "随机化",
+    "noiseControl": "噪点控制",
+    "noiseAmount": "噪点数量",
+    "canvasSettings": "画布设置",
+    "aspectRatio": "宽高比",
+    "showColorPoints": "显示颜色点",
+    "downloadOptions": "下载选项",
+    "download": "下载"
+  }
+}

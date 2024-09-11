@@ -3,7 +3,8 @@ import styles from '../../styles/glass.module.css';
 
 export default function NoiseControl({
   noiseAmount,
-  setNoiseAmount
+  setNoiseAmount,
+  t
 }) {
   const handleNoiseChange = (e) => {
     setNoiseAmount(parseInt(e.target.value));
@@ -14,10 +15,10 @@ export default function NoiseControl({
 
   return (
     <div className={`${styles.glassEffect} space-y-4 p-6`}>
-      <h2 className="text-xl font-bold mb-4 text-orange-300">Noise Control</h2>
+      <h2 className="text-xl font-bold mb-4 text-orange-300">{t.noiseControl}</h2>
       <div className="space-y-2">
         <label className="block text-sm font-bold text-orange-200">
-          Noise Amount: {noisePercentages[noiseAmount]}%
+          {t.noiseAmount}: {noisePercentages[noiseAmount]}%
         </label>
         <div className="relative pt-1">
           <input

@@ -7,7 +7,8 @@ export default function CanvasSettings({
   handleDownload,
   showColorPoints,
   setShowColorPoints,
-  isTransitioningAspectRatio
+  isTransitioningAspectRatio,
+  t
 }) {
   const [downloadFormat, setDownloadFormat] = useState('png');
   const [downloadResolution, setDownloadResolution] = useState('hd');
@@ -20,11 +21,11 @@ export default function CanvasSettings({
 
   return (
     <div className={`${styles.glassEffect} space-y-6 p-6`}>
-      <h2 className="text-xl font-bold mb-4 text-orange-300">Canvas Settings</h2>
+      <h2 className="text-xl font-bold mb-4 text-orange-300">{t.canvasSettings}</h2>
       
       <div className="space-y-2">
         <label className="block text-sm font-bold text-orange-200">
-          Aspect Ratio
+          {t.aspectRatio}
         </label>
         <select
           value={aspectRatio}
@@ -41,7 +42,7 @@ export default function CanvasSettings({
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-sm font-bold text-orange-200">Show Color Points</span>
+        <span className="text-sm font-bold text-orange-200">{t.showColorPoints}</span>
         <label className="relative inline-flex items-center cursor-pointer">
           <input
             type="checkbox"
@@ -55,7 +56,7 @@ export default function CanvasSettings({
 
       <div className="space-y-2">
         <label className="block text-sm font-bold text-orange-200">
-          Download Options
+          {t.downloadOptions}
         </label>
         <div className="flex flex-col space-y-2">
           <select
@@ -79,7 +80,7 @@ export default function CanvasSettings({
             onClick={() => handleDownload(downloadFormat, downloadResolution)}
             className="w-full px-4 py-2 bg-orange-300 text-gray-900 text-sm font-bold rounded-md hover:bg-orange-200 transition-colors"
           >
-            Download
+            {t.download}
           </button>
         </div>
       </div>

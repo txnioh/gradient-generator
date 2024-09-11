@@ -8,6 +8,7 @@ import CanvasSettings from './components/canvas-settings';
 import BackgroundGradient from './components/background-gradient';
 import glassStyles from './styles/glass.module.css';
 import Color from 'color';
+import translations from '../translations.json';
 
 const generatePastelColor = () => {
   const r = Math.floor((Math.random() * 55) + 200).toString(16);
@@ -42,6 +43,8 @@ export default function Home() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionColors, setTransitionColors] = useState(null);
   const [isTransitioningAspectRatio, setIsTransitioningAspectRatio] = useState(false);
+  const [language, setLanguage] = useState('en');
+  const t = translations[language];
 
   useEffect(() => {
     drawGradient();
@@ -400,7 +403,19 @@ export default function Home() {
       <BackgroundGradient />
 
       <main className="flex-grow flex flex-col items-center justify-center p-4">
-        <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center text-orange-300">Gradient Generator</h1>
+        <div className="absolute top-4 right-4">
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="bg-black text-orange-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+
+        <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center text-orange-300">{t.title}</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
           <div className="col-span-1 md:col-span-2 lg:col-span-1 flex flex-col items-center">
@@ -426,6 +441,7 @@ export default function Home() {
               hoveredColorIndex={hoveredColorIndex}
               animateTransition={animateTransition}
               isTransitioning={isTransitioning}
+              t={t}
             />
           </div>
           
@@ -433,6 +449,7 @@ export default function Home() {
             <NoiseControl
               noiseAmount={noiseAmount}
               setNoiseAmount={setNoiseAmount}
+              t={t}
             />
 
             <CanvasSettings
@@ -442,6 +459,7 @@ export default function Home() {
               showColorPoints={showColorPoints}
               setShowColorPoints={setShowColorPoints}
               isTransitioningAspectRatio={isTransitioningAspectRatio}
+              t={t}
             />
           </div>
         </div>
