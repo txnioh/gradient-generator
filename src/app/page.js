@@ -31,6 +31,7 @@ export default function Home() {
   const [showColorPoints, setShowColorPoints] = useState(false); // Set default to false
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionColors, setTransitionColors] = useState(null);
+  const [isTransitioningAspectRatio, setIsTransitioningAspectRatio] = useState(false);
 
   useEffect(() => {
     drawGradient();
@@ -217,21 +218,47 @@ export default function Home() {
   };
 
   const handleAspectRatioChange = (newRatio) => {
+    if (isTransitioningAspectRatio) return;
+
     setAspectRatio(newRatio);
     const [width, height] = newRatio.split(':').map(Number);
     let newWidth, newHeight;
 
     if (newRatio === '9:19.5') {
-      // For iPhone aspect ratio, we'll use a scaled version of the actual dimensions
       newWidth = 300;
-      newHeight = 650; // Approximately 300 * (19.5 / 9)
+      newHeight = 650;
     } else {
-      // For other aspect ratios, we'll keep the current logic
       newWidth = 300;
       newHeight = (newWidth / width) * height;
     }
 
-    setCanvasSize({ width: newWidth, height: newHeight });
+    animateAspectRatioTransition(newWidth, newHeight);
+  };
+
+  const animateAspectRatioTransition = (newWidth, newHeight) => {
+    setIsTransitioningAspectRatio(true);
+    
+    const startWidth = canvasSize.width;
+    const startHeight = canvasSize.height;
+    const duration = 300; // 300ms transition
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+      const progress = (currentTime - startTime) / duration;
+
+      if (progress < 1) {
+        const currentWidth = startWidth + (newWidth - startWidth) * progress;
+        const currentHeight = startHeight + (newHeight - startHeight) * progress;
+
+        setCanvasSize({ width: currentWidth, height: currentHeight });
+        requestAnimationFrame(animate);
+      } else {
+        setCanvasSize({ width: newWidth, height: newHeight });
+        setIsTransitioningAspectRatio(false);
+      }
+    };
+
+    requestAnimationFrame(animate);
   };
 
   const handleDownload = (format, resolution) => {
@@ -400,6 +427,7 @@ export default function Home() {
               handleDownload={handleDownload}
               showColorPoints={showColorPoints}
               setShowColorPoints={setShowColorPoints}
+              isTransitioningAspectRatio={isTransitioningAspectRatio}
             />
           </div>
         </div>

@@ -6,7 +6,8 @@ export default function CanvasSettings({
   handleAspectRatioChange,
   handleDownload,
   showColorPoints,
-  setShowColorPoints
+  setShowColorPoints,
+  isTransitioningAspectRatio
 }) {
   const [downloadFormat, setDownloadFormat] = useState('png');
   const [downloadResolution, setDownloadResolution] = useState('hd');
@@ -28,7 +29,8 @@ export default function CanvasSettings({
         <select
           value={aspectRatio}
           onChange={(e) => handleAspectRatioChange(e.target.value)}
-          className="w-full bg-black text-orange-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
+          className={`w-full bg-black text-orange-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400 ${isTransitioningAspectRatio ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isTransitioningAspectRatio}
         >
           <option value="9:19.5">iPhone (9:19.5)</option>
           <option value="1:1">1:1 (Square)</option>
