@@ -7,12 +7,22 @@ import NoiseControl from './components/noise-control';
 import CanvasSettings from './components/canvas-settings';
 import BackgroundGradient from './components/background-gradient';
 import glassStyles from './styles/glass.module.css';
+import Color from 'color';
 
 const generatePastelColor = () => {
   const r = Math.floor((Math.random() * 55) + 200).toString(16);
   const g = Math.floor((Math.random() * 55) + 200).toString(16);
   const b = Math.floor((Math.random() * 55) + 200).toString(16);
   return `#${r}${g}${b}`;
+};
+
+const isValidColor = (color) => {
+  try {
+    Color(color);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 export default function Home() {
@@ -44,22 +54,24 @@ export default function Home() {
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     // Fill the entire canvas with the first color
-    if (colors.length > 0) {
+    if (colors.length > 0 && isValidColor(colors[0].color)) {
       ctx.fillStyle = colors[0].color;
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
     }
 
     // Draw radial gradients for the rest of the colors
     colors.slice(1).forEach((color) => {
-      const gradient = ctx.createRadialGradient(
-        color.position.x * canvasSize.width, color.position.y * canvasSize.height, 0,
-        color.position.x * canvasSize.width, color.position.y * canvasSize.height, Math.max(canvasSize.width, canvasSize.height) * (color.size || 0.8) // Use the size property
-      );
-      gradient.addColorStop(0, color.color);
-      gradient.addColorStop(1, 'rgba(255,255,255,0)');
+      if (isValidColor(color.color)) {
+        const gradient = ctx.createRadialGradient(
+          color.position.x * canvasSize.width, color.position.y * canvasSize.height, 0,
+          color.position.x * canvasSize.width, color.position.y * canvasSize.height, Math.max(canvasSize.width, canvasSize.height) * (color.size || 0.8)
+        );
+        gradient.addColorStop(0, color.color);
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
+      }
     });
 
     if (showColorPoints) {
@@ -286,21 +298,23 @@ export default function Home() {
     const tempCtx = tempCanvas.getContext('2d');
     
     // Draw gradient
-    if (colors.length > 0) {
+    if (colors.length > 0 && isValidColor(colors[0].color)) {
       tempCtx.fillStyle = colors[0].color;
       tempCtx.fillRect(0, 0, width, height);
     }
 
     colors.slice(1).forEach((color) => {
-      const gradient = tempCtx.createRadialGradient(
-        color.position.x * width, color.position.y * height, 0,
-        color.position.x * width, color.position.y * height, Math.max(width, height) * (color.size || 0.8) // Use the size property
-      );
-      gradient.addColorStop(0, color.color);
-      gradient.addColorStop(1, 'rgba(255,255,255,0)');
+      if (isValidColor(color.color)) {
+        const gradient = tempCtx.createRadialGradient(
+          color.position.x * width, color.position.y * height, 0,
+          color.position.x * width, color.position.y * height, Math.max(width, height) * (color.size || 0.8)
+        );
+        gradient.addColorStop(0, color.color);
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
-      tempCtx.fillStyle = gradient;
-      tempCtx.fillRect(0, 0, width, height);
+        tempCtx.fillStyle = gradient;
+        tempCtx.fillRect(0, 0, width, height);
+      }
     });
     
     // Draw noise
