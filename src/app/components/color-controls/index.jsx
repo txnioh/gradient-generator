@@ -77,7 +77,8 @@ export default function ColorControls({
   addColor,
   hoveredColorIndex,
   animateTransition,
-  isTransitioning
+  isTransitioning,
+  t
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isAddingColor, setIsAddingColor] = useState(false);
@@ -135,8 +136,8 @@ export default function ColorControls({
 
   return (
     <div className={`${styles.glassEffect} space-y-4 p-6`}>
-      <h2 className="text-xl font-bold mb-4 text-orange-300">Color Controls</h2>
-      <p className="text-sm text-orange-200 mb-2">The first color is the base color that fills the entire canvas.</p>
+      <h2 className="text-xl font-bold mb-4 text-orange-300">{t.colorControls}</h2>
+      <p className="text-sm text-orange-200 mb-2">{t.baseColorInfo}</p>
       <ul className="space-y-3">
         {colors.map((color, index) => (
           <li 
@@ -188,7 +189,7 @@ export default function ColorControls({
             </div>
             {index !== 0 && expandedColorIndex === index && (
               <div className="mt-2 flex items-center">
-                <span className="text-xs text-orange-200 mr-2">Size:</span>
+                <span className="text-xs text-orange-200 mr-2">{t.size}:</span>
                 <input
                   type="range"
                   min="0.1"
@@ -229,7 +230,7 @@ export default function ColorControls({
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
-              Add Color
+              {t.addColor}
             </button>
           </div>
         ) : (
@@ -240,7 +241,7 @@ export default function ColorControls({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
-            Add Color
+            {t.addColor}
           </button>
         )}
         <div className="flex items-center space-x-2">
@@ -263,7 +264,7 @@ export default function ColorControls({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
             </svg>
-            Randomize
+            {t.randomize}
           </button>
         </div>
       </div>
