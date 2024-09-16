@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Canvas from './components/canvas';
 import ColorControls from './components/color-controls';
 import NoiseControl from './components/noise-control';
@@ -9,6 +9,7 @@ import BackgroundGradient from './components/background-gradient';
 import glassStyles from './styles/glass.module.css';
 import Color from 'color';
 import translations from '../translations.json';
+import MobileControls from './components/mobile-controls';
 
 const generatePastelColor = () => {
   const r = Math.floor((Math.random() * 55) + 200).toString(16);
@@ -45,6 +46,40 @@ export default function Home() {
   const [isTransitioningAspectRatio, setIsTransitioningAspectRatio] = useState(false);
   const [language, setLanguage] = useState('en');
   const t = translations[language];
+  const [activeControl, setActiveControl] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    handleResize(); // Llamar inicialmente para establecer el tamaño
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      setCanvasSize({ width: windowSize.width, height: windowSize.height - 160 }); // Aumentado a 160px para más espacio
+    } else {
+      // Ajustar el tamaño para escritorio
+      const desktopWidth = 500; // Puedes ajustar este valor según tus preferencias
+      const desktopHeight = (desktopWidth / 9) * 19.5; // Mantener la relación de aspecto
+      setCanvasSize({ width: desktopWidth, height: desktopHeight });
+    }
+  }, [isMobile, windowSize]);
 
   useEffect(() => {
     drawGradient();
@@ -398,40 +433,33 @@ export default function Home() {
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
 
-  return (
-    <div className="flex flex-col min-h-screen text-gray-100">
-      <BackgroundGradient />
-
-      <main className="flex-grow flex flex-col items-center justify-center p-4">
-        <div className="absolute top-4 right-4">
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="bg-black text-orange-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
-          >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="zh">中文</option>
-          </select>
-        </div>
-
-        <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center text-orange-300">{t.title}</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
-          <div className="col-span-1 md:col-span-2 lg:col-span-1 flex flex-col items-center">
-            <div className={glassStyles.glassEffect}>
-              <Canvas
-                canvasRef={canvasRef}
-                noiseCanvasRef={noiseCanvasRef}
-                canvasSize={canvasSize}
-                handleMouseDown={handleMouseDown}
-                handleMouseMove={handleMouseMove}
-                handleMouseUp={handleMouseUp}
-                handleMouseLeave={handleMouseLeave}
-              />
-            </div>
-          </div>
-
+  const renderControls = () => {
+    if (isMobile) {
+      return (
+        <MobileControls
+          activeControl={activeControl}
+          setActiveControl={setActiveControl}
+          colors={colors}
+          setColors={setColors}
+          removeColor={removeColor}
+          addColor={addColor}
+          hoveredColorIndex={hoveredColorIndex}
+          animateTransition={animateTransition}
+          isTransitioning={isTransitioning}
+          noiseAmount={noiseAmount}
+          setNoiseAmount={setNoiseAmount}
+          aspectRatio={aspectRatio}
+          handleAspectRatioChange={handleAspectRatioChange}
+          handleDownload={handleDownload}
+          showColorPoints={showColorPoints}
+          setShowColorPoints={setShowColorPoints}
+          isTransitioningAspectRatio={isTransitioningAspectRatio}
+          t={t}
+        />
+      );
+    } else {
+      return (
+        <>
           <div className="col-span-1 space-y-6">
             <ColorControls
               colors={colors}
@@ -444,14 +472,12 @@ export default function Home() {
               t={t}
             />
           </div>
-          
           <div className="col-span-1 lg:col-span-1 space-y-6">
             <NoiseControl
               noiseAmount={noiseAmount}
               setNoiseAmount={setNoiseAmount}
               t={t}
             />
-
             <CanvasSettings
               aspectRatio={aspectRatio}
               handleAspectRatioChange={handleAspectRatioChange}
@@ -462,6 +488,36 @@ export default function Home() {
               t={t}
             />
           </div>
+        </>
+      );
+    }
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen text-gray-100">
+      <BackgroundGradient />
+
+      <main className={`flex-grow flex flex-col items-center justify-center ${isMobile ? 'p-0' : 'p-4'}`}>
+        {!isMobile && (
+          <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center text-orange-300">{t.title}</h1>
+        )}
+        
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-6 w-full max-w-7xl`}>
+          <div className={`col-span-1 ${isMobile ? 'h-[calc(100vh-160px)]' : 'md:col-span-2 lg:col-span-1'} flex flex-col items-center`}>
+            <div className={`${glassStyles.glassEffect} ${isMobile ? 'w-full h-full' : 'w-full h-full'}`}>
+              <Canvas
+                canvasRef={canvasRef}
+                noiseCanvasRef={noiseCanvasRef}
+                canvasSize={canvasSize}
+                handleMouseDown={handleMouseDown}
+                handleMouseMove={handleMouseMove}
+                handleMouseUp={handleMouseUp}
+                handleMouseLeave={handleMouseLeave}
+              />
+            </div>
+          </div>
+
+          {renderControls()}
         </div>
       </main>
     </div>
