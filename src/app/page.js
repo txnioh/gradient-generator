@@ -373,11 +373,11 @@ export default function Home() {
 
     tempCtx.putImageData(imageData, 0, 0);
     
-    // Create download link
-    const link = document.createElement('a');
-    link.download = `gradient_${resolution}.${format}`;
-    link.href = tempCanvas.toDataURL(`image/${format}`);
-    link.click();
+    // Create data URL
+    const dataUrl = tempCanvas.toDataURL(`image/${format}`);
+    
+    // Open in new tab
+    window.open(dataUrl, '_blank');
   };
 
   const animateTransition = (newColors) => {
