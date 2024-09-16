@@ -11,6 +11,7 @@
   "dependencies": {
     "color": "^4.2.3",
     "file-saver": "^2.0.5",
+    "framer-motion": "^11.5.4",
     "next": "14.2.9",
     "openai": "^4.58.2",
     "react": "^18",
