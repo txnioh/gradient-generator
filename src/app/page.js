@@ -10,6 +10,7 @@ import glassStyles from './styles/glass.module.css';
 import Color from 'color';
 import translations from '../translations.json';
 import MobileControls from './components/mobile-controls';
+import { saveAs } from 'file-saver';
 
 const generatePastelColor = () => {
   const r = Math.floor((Math.random() * 55) + 200).toString(16);
@@ -311,20 +312,16 @@ export default function Home() {
     requestAnimationFrame(animate);
   };
 
-  const handleDownload = (format, resolution) => {
+  const handleDownload = useCallback(async (format, resolution) => {
     let width, height;
     if (resolution === '4k') {
-      width = 3840;
-      height = 2160;
+      width = 3840; height = 2160;
     } else if (resolution === 'fullhd') {
-      width = 1920;
-      height = 1080;
+      width = 1920; height = 1080;
     } else {
-      width = 1280;
-      height = 720;
+      width = 1280; height = 720;
     }
 
-    // Adjust for iPhone aspect ratio if that's selected
     if (aspectRatio === '9:19.5') {
       const ratio = 19.5 / 9;
       height = Math.round(width * ratio);
@@ -373,12 +370,27 @@ export default function Home() {
 
     tempCtx.putImageData(imageData, 0, 0);
     
-    // Create download link
-    const link = document.createElement('a');
-    link.download = `gradient_${resolution}.${format}`;
-    link.href = tempCanvas.toDataURL(`image/${format}`);
-    link.click();
-  };
+    const blob = await new Promise(resolve => tempCanvas.toBlob(resolve, `image/${format}`));
+    const fileName = `gradient_${resolution}.${format}`;
+
+    if (navigator.share && isMobile) {
+      try {
+        const file = new File([blob], fileName, { type: `image/${format}` });
+        await navigator.share({
+          files: [file],
+          title: 'Gradient Image',
+          text: 'Download your generated gradient image'
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+        // Fallback to direct download
+        saveAs(blob, fileName);
+      }
+    } else {
+      // For desktop or if share is not supported
+      saveAs(blob, fileName);
+    }
+  }, [aspectRatio, colors, noiseAmount, isMobile]);
 
   const animateTransition = (newColors) => {
     setIsTransitioning(true);

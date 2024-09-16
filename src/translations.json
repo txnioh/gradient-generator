@@ -12,7 +12,8 @@
     "aspectRatio": "Aspect Ratio",
     "showColorPoints": "Show Color Points",
     "downloadOptions": "Download Options",
-    "download": "Download"
+    "download": "Download",
+    "shareOrDownload": "Share or Download"
   },
   "es": {
     "title": "Generador de Gradientes",
@@ -27,7 +28,8 @@
     "aspectRatio": "Relación de Aspecto",
     "showColorPoints": "Mostrar Puntos de Color",
     "downloadOptions": "Opciones de Descarga",
-    "download": "Descargar"
+    "download": "Descargar",
+    "shareOrDownload": "Compartir o Descargar"
   },
   "zh": {
     "title": "渐变生成器",
@@ -42,6 +44,7 @@
     "aspectRatio": "宽高比",
     "showColorPoints": "显示颜色点",
     "downloadOptions": "下载选项",
-    "download": "下载"
+    "download": "下载",
+    "shareOrDownload": "分享或下载"
   }
 }

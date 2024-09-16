@@ -8,7 +8,8 @@ export default function CanvasSettings({
   showColorPoints,
   setShowColorPoints,
   isTransitioningAspectRatio,
-  t
+  t,
+  isMobile
 }) {
   const [downloadFormat, setDownloadFormat] = useState('png');
   const [downloadResolution, setDownloadResolution] = useState('hd');
@@ -80,7 +81,7 @@ export default function CanvasSettings({
             onClick={() => handleDownload(downloadFormat, downloadResolution)}
             className="w-full px-4 py-2 bg-orange-300 text-gray-900 text-sm font-bold rounded-md hover:bg-orange-200 transition-colors"
           >
-            {t.download}
+            {isMobile ? t.shareOrDownload : t.download}
           </button>
         </div>
       </div>
