@@ -12,11 +12,11 @@ import translations from '../translations.json';
 import MobileControls from './components/mobile-controls';
 import { saveAs } from 'file-saver';
 
-const generatePastelColor = () => {
-  const r = Math.floor((Math.random() * 55) + 200).toString(16);
-  const g = Math.floor((Math.random() * 55) + 200).toString(16);
-  const b = Math.floor((Math.random() * 55) + 200).toString(16);
-  return `#${r}${g}${b}`;
+const generateVibrantColor = () => {
+  const hue = Math.floor(Math.random() * 360);
+  const saturation = 70 + Math.random() * 30; // Entre 70% y 100%
+  const lightness = 45 + Math.random() * 10; // Entre 45% y 55%
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
 
 const isValidColor = (color) => {
@@ -30,13 +30,13 @@ const isValidColor = (color) => {
 
 export default function Home() {
   const [colors, setColors] = useState([
-    { color: '#FFB3BA', position: { x: 0.2, y: 0.2 }, size: 0.8 },
-    { color: '#BAFFC9', position: { x: 0.8, y: 0.5 }, size: 0.8 },
-    { color: '#BAE1FF', position: { x: 0.5, y: 0.8 }, size: 0.8 }
+    { color: '#8ACB24', position: { x: 0.2, y: 0.2 }, size: 0.8 },
+    { color: '#3859ff', position: { x: 0.8, y: 0.5 }, size: 0.8 },
+    { color: '#85c4ff', position: { x: 0.5, y: 0.8 }, size: 0.8 }
   ]);
   const [activeColorIndex, setActiveColorIndex] = useState(null);
   const [hoveredColorIndex, setHoveredColorIndex] = useState(null);
-  const [noiseAmount, setNoiseAmount] = useState(0);
+  const [noiseAmount, setNoiseAmount] = useState(1);
   const canvasRef = useRef(null);
   const noiseCanvasRef = useRef(null);
   const [canvasSize, setCanvasSize] = useState({ width: 300, height: 650 }); // Adjusted for iPhone aspect ratio
@@ -215,7 +215,7 @@ export default function Home() {
 
   const addColor = () => {
     setColors([...colors, {
-      color: generatePastelColor(),
+      color: generateVibrantColor(),
       position: { x: 0.5, y: 0.5 },
       size: 0.8
     }]);

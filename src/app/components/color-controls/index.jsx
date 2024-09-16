@@ -79,12 +79,12 @@ export default function ColorControls({
   animateTransition,
   isTransitioning,
   t,
-  isMobile // Add this prop
+  isMobile
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isAddingColor, setIsAddingColor] = useState(false);
   const [newColor, setNewColor] = useState('#FFFFFF');
-  const [selectedPalette, setSelectedPalette] = useState('pastel');
+  const [selectedPalette, setSelectedPalette] = useState('vibrant');
   const [expandedColorIndex, setExpandedColorIndex] = useState(null);
 
   const handleColorChange = (index, newColor) => {
@@ -251,8 +251,8 @@ export default function ColorControls({
             onChange={(e) => setSelectedPalette(e.target.value)}
             className="flex-grow bg-black text-orange-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400"
           >
-            <option value="pastel">Pastel</option>
             <option value="vibrant">Vibrant</option>
+            <option value="pastel">Pastel</option>
             <option value="earthy">Earthy</option>
             <option value="neon">Neon</option>
             <option value="monochrome">Monochrome</option>
