@@ -530,6 +530,11 @@ export default function Home() {
           {renderControls()}
         </div>
       </main>
+
+      {/* Footer añadido aquí */}
+      <footer className="w-full text-center py-4 text-orange-300">
+        Made with love by txnio
+      </footer>
     </div>
   );
 }
