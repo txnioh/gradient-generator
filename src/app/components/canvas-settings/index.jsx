@@ -13,11 +13,18 @@ export default function CanvasSettings({
 }) {
   const [downloadFormat, setDownloadFormat] = useState('png');
   const [downloadResolution, setDownloadResolution] = useState('hd');
+  const [showDownloadMessage, setShowDownloadMessage] = useState(false);
 
   const resolutions = {
     '4k': '3840x2160',
     'fullhd': '1920x1080',
     'hd': '1280x720'
+  };
+
+  const handleDownloadClick = () => {
+    handleDownload(downloadFormat, downloadResolution);
+    setShowDownloadMessage(true);
+    setTimeout(() => setShowDownloadMessage(false), 5000); // Ocultar mensaje después de 5 segundos
   };
 
   return (
@@ -78,13 +85,19 @@ export default function CanvasSettings({
             <option value="hd">HD ({resolutions['hd']})</option>
           </select>
           <button
-            onClick={() => handleDownload(downloadFormat, downloadResolution)}
+            onClick={handleDownloadClick}
             className="w-full px-4 py-2 bg-orange-300 text-gray-900 text-sm font-bold rounded-md hover:bg-orange-200 transition-colors"
           >
             {isMobile ? t.shareOrDownload : t.download}
           </button>
         </div>
       </div>
+      
+      {showDownloadMessage && (
+        <div className="mt-2 text-sm text-orange-200">
+          {t.downloadInstructions}
+        </div>
+      )}
     </div>
   );
 }
