@@ -52,20 +52,13 @@ export default function Home() {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useEffect(() => {
     const handleResize = () => {
+      const newIsMobile = window.innerWidth < 768;
+      setIsMobile(newIsMobile);
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     };
 
-    handleResize(); // Llamar inicialmente para establecer el tamaño
+    handleResize();
     window.addEventListener('resize', handleResize);
 
     return () => window.removeEventListener('resize', handleResize);
@@ -73,11 +66,11 @@ export default function Home() {
 
   useEffect(() => {
     if (isMobile) {
-      setCanvasSize({ width: windowSize.width, height: windowSize.height - 160 }); // Aumentado a 160px para más espacio
+      setCanvasSize({ width: windowSize.width, height: windowSize.height - 160 });
     } else {
-      // Ajustar el tamaño para escritorio
-      const desktopWidth = 500; // Puedes ajustar este valor según tus preferencias
-      const desktopHeight = (desktopWidth / 9) * 19.5; // Mantener la relación de aspecto
+      // Fixed size for desktop
+      const desktopWidth = 400;
+      const desktopHeight = (desktopWidth / 9) * 19.5;
       setCanvasSize({ width: desktopWidth, height: desktopHeight });
     }
   }, [isMobile, windowSize]);
@@ -92,7 +85,7 @@ export default function Home() {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-    // Fill the entire canvas with the first color
+    // Fill the entire canvas with the first color only if it exists
     if (colors.length > 0 && isValidColor(colors[0].color)) {
       ctx.fillStyle = colors[0].color;
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
@@ -275,11 +268,12 @@ export default function Home() {
     const [width, height] = newRatio.split(':').map(Number);
     let newWidth, newHeight;
 
-    if (newRatio === '9:19.5') {
-      newWidth = 300;
-      newHeight = 650;
+    if (isMobile) {
+      newWidth = windowSize.width;
+      newHeight = (newWidth / width) * height;
     } else {
-      newWidth = 300;
+      // Para escritorio, mantenemos un ancho fijo y ajustamos la altura
+      newWidth = 400; // Este valor debe coincidir con el ancho del canvas en escritorio
       newHeight = (newWidth / width) * height;
     }
 
@@ -482,6 +476,7 @@ export default function Home() {
               animateTransition={animateTransition}
               isTransitioning={isTransitioning}
               t={t}
+              isMobile={false}
             />
           </div>
           <div className="col-span-1 lg:col-span-1 space-y-6">
@@ -509,14 +504,17 @@ export default function Home() {
     <div className="flex flex-col min-h-screen text-gray-100">
       <BackgroundGradient />
 
-      <main className={`flex-grow flex flex-col items-center justify-center ${isMobile ? 'p-0' : 'p-4'}`}>
+      <main className={`flex-grow flex flex-col items-center ${isMobile ? 'justify-start pt-4' : 'justify-center p-4'}`}>
         {!isMobile && (
           <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center text-orange-300">{t.title}</h1>
         )}
         
-        <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-6 w-full max-w-7xl`}>
-          <div className={`col-span-1 ${isMobile ? 'h-[calc(100vh-160px)]' : 'md:col-span-2 lg:col-span-1'} flex flex-col items-center`}>
-            <div className={`${glassStyles.glassEffect} ${isMobile ? 'w-full h-full' : 'w-full h-full'}`}>
+        <div className={`grid ${isMobile ? 'grid-cols-1 w-full h-[calc(100vh-160px)]' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl'}`}>
+          <div className={`col-span-1 ${isMobile ? 'h-full' : 'md:col-span-2 lg:col-span-1'} flex flex-col items-center`}>
+            <div className={`${glassStyles.glassEffect} ${isMobile ? 'w-full h-full' : ''} rounded-lg overflow-hidden`} style={{
+              width: isMobile ? '100%' : '400px',
+              height: isMobile ? '100%' : `${canvasSize.height}px`
+            }}>
               <Canvas
                 canvasRef={canvasRef}
                 noiseCanvasRef={noiseCanvasRef}

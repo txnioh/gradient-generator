@@ -7,12 +7,12 @@ export default function Canvas({
   handleMouseUp
 }) {
   return (
-    <div className="relative w-full h-full" style={{ aspectRatio: '9 / 19.5' }}>
+    <div className="relative w-full h-full bg-gray-900 rounded-lg">
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg object-contain"
+        className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -22,7 +22,7 @@ export default function Canvas({
         ref={noiseCanvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        className="absolute top-0 left-0 w-full h-full rounded-lg pointer-events-none object-contain"
+        className="absolute top-0 left-0 w-full h-full rounded-lg pointer-events-none"
         style={{ mixBlendMode: 'overlay' }}
       ></canvas>
     </div>
